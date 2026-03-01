@@ -1,23 +1,34 @@
 document.addEventListener('DOMContentLoaded', () => {
     // initialize icons
-    lucide.createIcons();
+    try {
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    } catch (e) {
+        console.warn("Lucide failed to load: ", e);
+    }
 
     // Default View (London) serves as fallback
     const defaultLat = 51.505;
     const defaultLng = -0.09;
 
+    let map;
     // Map Initialization
-    const map = L.map('map', {
-        zoomControl: false,
-        attributionControl: false
-    }).setView([defaultLat, defaultLng], 13);
+    try {
+        map = L.map('map', {
+            zoomControl: false,
+            attributionControl: false
+        }).setView([defaultLat, defaultLng], 13);
 
-    // Dark Mode Tiles
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: 'abcd',
-        maxZoom: 20
-    }).addTo(map);
+        // Dark Mode Tiles
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 20
+        }).addTo(map);
+    } catch (e) {
+        console.error("Leaflet failed to initialize the map:", e);
+    }
 
     // Colors
     const colors = {
